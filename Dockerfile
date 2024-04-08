@@ -5,9 +5,9 @@ FROM php:5.4-apache
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
-    libfreetype6-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysql pdo pdo_mysql
+    libfreetype6-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd mysql pdo pdo_mysql
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
