@@ -66,9 +66,9 @@ function basic_query()
 			continue;
 		}
 
-		if (!mysqli_query($current_statement))
+		if (!mysqli_query($current_statement, $connection))
 		{
-			$error_message = mysqli_error($db_connection);
+			$error_message = mysqli_error($connection);
 
 			// Error 1050: Table already exists!
 			if (strpos($error_message, 'already exists') === false)
