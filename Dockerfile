@@ -1,5 +1,5 @@
 # Use an official PHP runtime as a parent image with Apache
-FROM php:5.4-apache
+FROM php:7.4-apache
 
 # Install any needed packages and PHP extensions
 RUN apt-get update && apt-get install -y \
