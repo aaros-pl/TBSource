@@ -24,19 +24,19 @@ function step_1()
     </tr>
     <tr>
       <td>Database Server (use localhost if not sure) </td>
-      <td><input name="server2" type="text" id="server" value="localhost" size="40" maxlength="40" /></td>
+      <td><input name="server2" type="text" id="server" value="localhost" size="40" maxlength="60" /></td>
     </tr>
     <tr>
       <td>Database Name</td>
-      <td><input name="dbname" type="text" id="dbname" value="tbsource" size="40" maxlength="40" /></td>
+      <td><input name="dbname" type="text" id="dbname" value="tbsource" size="40" maxlength="60" /></td>
     </tr>
     <tr>
       <td>Database User </td>
-      <td><input name="dbuser" type="text" id="dbuser" size="40" maxlength="40" /></td>
+      <td><input name="dbuser" type="text" id="dbuser" size="40" maxlength="60" /></td>
     </tr>
     <tr>
       <td>Database Password </td>
-      <td><input name="dbpass" type="text" id="dbpass" size="40" maxlength="40" /></td>
+      <td><input name="dbpass" type="text" id="dbpass" size="40" maxlength="60" /></td>
     </tr>
 
     <tr>
