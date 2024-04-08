@@ -16,7 +16,7 @@ RUN a2enmod rewrite
 COPY . /var/www/html/
 
 # Give permissions to the writeable directories as per the repository instructions
-RUN chmod 666 /var/www/html/include/secrets.php \
+RUN chmod 666 /var/www/html/include/secrets/secrets.php \
     && chmod 777 /var/www/html/torrents
 
 # Expose port 80 to the outside world

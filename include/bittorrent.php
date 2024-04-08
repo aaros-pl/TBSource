@@ -1,6 +1,6 @@
 <?
 error_reporting(E_ALL ^ E_NOTICE); 
-require_once("secrets.php");
+require_once("secrets/secrets.php");
 require_once("cleanup.php");
 
 if( !defined("TB_INSTALLED") )

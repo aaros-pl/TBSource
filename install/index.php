@@ -17,7 +17,7 @@ function step_1()
     <tr align="center" valign="middle" bgcolor="#FFFFFF">
       <th height="100" colspan="2" class="colhead"><p class="title big">Post install instructions:</p>
       <p class="title big"> 1) Create the database. </p>
-      <p class="title big"> 2) Chmod the /include/secrets.php to 666 if using unix/linux </p></th>
+      <p class="title big"> 2) Chmod the /include/secrets/secrets.php to 666 if using unix/linux </p></th>
     </tr>
     <tr>
       <td colspan="2" class="colhead">Database Configuration </td>
@@ -98,7 +98,7 @@ function step_1()
 
 
 
-include('../include/secrets.php');
+include('../include/secrets/secrets.php');
 if( defined("TB_INSTALLED") )
 {
 	die('Already installed <a href="../index.php">INDEX</a>');

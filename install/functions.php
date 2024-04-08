@@ -12,7 +12,7 @@ function update_config()
 	$config_data .= '$mysql_pass = \'' . $_POST['dbpass'] . '\';' . "\n\n";
 	$config_data .= 'define(\'TB_INSTALLED\', true);'."\n\n";	
 	$config_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
-	if(!($fp = fopen('../include/secrets.php', 'w')))
+	if(!($fp = fopen('../include/secrets/secrets.php', 'w')))
 	{
 		die('Make secrets.php writable -> 666');
 	}
@@ -40,7 +40,7 @@ function basic_query()
 	$sql_lines = implode(' ', file(dirname(__FILE__) . '/install.sql'));
 	$sql_lines = explode("\n", $sql_lines);
 	
-	include('../include/secrets.php');
+	include('../include/secrets/secrets.php');
 	
 	if( !mysql_connect($mysql_host,$mysql_user,$mysql_pass) )
 	{
