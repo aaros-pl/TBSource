@@ -23,13 +23,10 @@ function update_config()
 			@fclose($fp);
 	}
 	
-	if( !mysql_connect($_POST['server'],$_POST['dbuser'],$_POST['dbpass']) )
-	{
-		die('Cant connect to databaseserver');
-	}
-	if( !mysql_select_db($_POST['dbname']) )
-	{
-		die('Cant select database');
+	$connection = mysqli_connect($_POST['server'], $_POST['dbuser'], $_POST['dbpass'], $_POST['dbname']);
+
+	if (!$connection) {
+		die('Cannot connect to database server');
 	}
 }
  
@@ -42,14 +39,11 @@ function basic_query()
 	
 	include('../include/secrets/secrets.php');
 	
-	if( !mysql_connect($mysql_host,$mysql_user,$mysql_pass) )
+	if( !mysqli_connect($mysql_host,$mysql_user,$mysql_pass,$mysql_db) )
 	{
 		die('Cant connect to databaseserver');
 	}
-	if( !mysql_select_db($mysql_db) )
-	{
-		die('Cant select database');
-	}
+	
 
 	// Execute the SQL.
 	$current_statement = '';
@@ -72,9 +66,9 @@ function basic_query()
 			continue;
 		}
 
-		if (!mysql_query($current_statement))
+		if (!mysqli_query($current_statement))
 		{
-			$error_message = mysql_error($db_connection);
+			$error_message = mysqli_error($db_connection);
 
 			// Error 1050: Table already exists!
 			if (strpos($error_message, 'already exists') === false)
@@ -103,7 +97,7 @@ function insert_sysop()
 	$wantpasshash = md5($secret . $_POST['sysoppass'] . $secret);
 	$editsecret = mksecret();
 
-	$ret = mysql_query("INSERT INTO users (username, class, passhash, secret, editsecret, email, status, added) VALUES (" .
+	$ret = mysqli_query("INSERT INTO users (username, class, passhash, secret, editsecret, email, status, added) VALUES (" .
 		implode(",", array_map("sqlesc", array($username, 6, $wantpasshash, $secret, $editsecret, $usermail, 'confirmed'))) .
 		",'" . get_date_time() . "')");
 	
@@ -114,15 +108,15 @@ function config()
 {
 	$online = gmdate("Y-m-d");
 	$added = sqlesc(get_date_time());
-	mysql_query("INSERT INTO config (name,value) VALUES ('siteonline','true')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('onlinesince','$online')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('sitename','".$_POST['sitename']."')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('domain','".$_POST['domain']."')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('announce_url','".$_POST['announce']."')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('sitemail','".$_POST['sitemail']."')");
-	mysql_query("INSERT INTO config (name,value) VALUES ('funds',0 )");	
-	mysql_query("INSERT INTO config (name,value) VALUES ('peerlimit',1000 )");
-	mysql_query("INSERT INTO news (userid,body,added) VALUES (1,'Welcome to your new tbsource installation',$added)");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('siteonline','true')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('onlinesince','$online')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('sitename','".$_POST['sitename']."')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('domain','".$_POST['domain']."')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('announce_url','".$_POST['announce']."')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('sitemail','".$_POST['sitemail']."')");
+	mysqli_query("INSERT INTO config (name,value) VALUES ('funds',0 )");	
+	mysqli_query("INSERT INTO config (name,value) VALUES ('peerlimit',1000 )");
+	mysqli_query("INSERT INTO news (userid,body,added) VALUES (1,'Welcome to your new tbsource installation',$added)");
 }
 	
 function finale()
@@ -151,7 +145,7 @@ function get_date_time($timestamp = 0)
 }
 
 function sqlesc($x) {
- return "'".mysql_real_escape_string($x)."'";
+ return "'".mysqli_real_escape_string($x)."'";
 }
 
   
