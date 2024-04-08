@@ -24,7 +24,7 @@ function step_1()
     </tr>
     <tr>
       <td>Database Server (use localhost if not sure) </td>
-      <td><input name="server2" type="text" id="server" value="localhost" size="40" maxlength="60" /></td>
+      <td><input name="server" type="text" id="server" value="localhost" size="40" maxlength="60" /></td>
     </tr>
     <tr>
       <td>Database Name</td>
