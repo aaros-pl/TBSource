@@ -1,26 +1,25 @@
-# Use an official PHP runtime as a parent image with Apache
-FROM php:7.4-apache
+# Use the official PHP 5.6 FPM image from Docker Hub based on Alpine Linux
+FROM php:5.6-fpm-alpine
 
-# Install any needed packages and PHP extensions
-RUN apt-get update && apt-get install -y \
+# Install necessary PHP extensions
+RUN apk add --no-cache \
+    freetype-dev \
+    libjpeg-turbo-dev \
     libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql
+    && docker-php-ext-install gd mysql mysqli pdo pdo_mysql
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Set the working directory inside the container
+WORKDIR /var/www/html
 
-# Copy the application code to the container
-COPY . /var/www/html/
+# Copy the repository content into the working directory
+# COPY app/ .
 
-# Give permissions to the writeable directories as per the repository instructions
-RUN chmod 666 /var/www/html/include/secrets/secrets.php \
-    && chmod 777 /var/www/html/torrents
+# Grant the proper permissions
+RUN chown -R www-data:www-data /var/www/html
 
-# Expose port 80 to the outside world
-EXPOSE 80
+# Expose port 9000 for PHP-FPM
+EXPOSE 9000
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Start PHP-FPM server
+CMD ["php-fpm"]

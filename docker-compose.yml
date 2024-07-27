@@ -1,0 +1,46 @@
+services:
+  php:
+    image: tbsource:latest
+    container_name: php
+    volumes:
+      - ./app:/var/www/html
+      - include:/var/www/html/include
+      - torrents:/var/www/html/torrents
+      - ./install:/var/www/html/install
+    expose:
+      - "9000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=example
+      - DB_NAME=tbsource
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./app:/var/www/html
+      - include:/var/www/html/include
+      - torrents:/var/www/html/torrents
+      - ./install:/var/www/html/install
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: tbsource
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  include:
+  torrents:
+  mysql_data:

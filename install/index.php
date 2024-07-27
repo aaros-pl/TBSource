@@ -17,26 +17,26 @@ function step_1()
     <tr align="center" valign="middle" bgcolor="#FFFFFF">
       <th height="100" colspan="2" class="colhead"><p class="title big">Post install instructions:</p>
       <p class="title big"> 1) Create the database. </p>
-      <p class="title big"> 2) Chmod the /include/secrets/secrets.php to 666 if using unix/linux </p></th>
+      <p class="title big"> 2) Chmod the /include/secrets.php to 666 if using unix/linux </p></th>
     </tr>
     <tr>
       <td colspan="2" class="colhead">Database Configuration </td>
     </tr>
     <tr>
       <td>Database Server (use localhost if not sure) </td>
-      <td><input name="server" type="text" id="server" value="localhost" size="40" maxlength="60" /></td>
+      <td><input name="server2" type="text" id="server" value="localhost" size="40" maxlength="40" /></td>
     </tr>
     <tr>
       <td>Database Name</td>
-      <td><input name="dbname" type="text" id="dbname" value="tbsource" size="40" maxlength="60" /></td>
+      <td><input name="dbname" type="text" id="dbname" value="tbsource" size="40" maxlength="40" /></td>
     </tr>
     <tr>
       <td>Database User </td>
-      <td><input name="dbuser" type="text" id="dbuser" size="40" maxlength="60" /></td>
+      <td><input name="dbuser" type="text" id="dbuser" size="40" maxlength="40" /></td>
     </tr>
     <tr>
       <td>Database Password </td>
-      <td><input name="dbpass" type="text" id="dbpass" size="40" maxlength="60" /></td>
+      <td><input name="dbpass" type="text" id="dbpass" size="40" maxlength="40" /></td>
     </tr>
 
     <tr>
@@ -98,7 +98,7 @@ function step_1()
 
 
 
-include('../include/secrets/secrets.php');
+include('../include/secrets.php');
 if( defined("TB_INSTALLED") )
 {
 	die('Already installed <a href="../index.php">INDEX</a>');
