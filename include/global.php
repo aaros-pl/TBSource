@@ -1,5 +1,7 @@
 <?
 
+date_default_timezone_set('Europe/Warsaw');
+
 $tzs["-720"] = "(GMT - 12:00 hours) Enitwetok, Kwajalien";
 $tzs["-660"] = "(GMT - 11:00 hours) Midway Island, Samoa";
 $tzs["-600"] = "(GMT - 10:00 hours) Hawaii";

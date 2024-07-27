@@ -33,82 +33,98 @@ function update_config()
 	}
 }
  
-	
 function basic_query()
 {
-	
-	$sql_lines = implode(' ', file(dirname(__FILE__) . '/install.sql'));
-	$sql_lines = explode("\n", $sql_lines);
-	
+    $sql_lines = implode(' ', file(dirname(__FILE__) . '/install.sql'));
+    $sql_lines = explode("\n", $sql_lines);
+
 	include('../include/secrets.php');
-	
-	if( !mysql_connect($mysql_host,$mysql_user,$mysql_pass) )
-	{
-		die('Cant connect to databaseserver');
-	}
-	if( !mysql_select_db($mysql_db) )
-	{
-		die('Cant select database');
-	}
 
-	// Execute the SQL.
-	$current_statement = '';
-	$failures = array();
-	$exists = array();
-	foreach ($sql_lines as $count => $line)
-	{
-		// No comments allowed!
-		if (substr($line, 0, 1) != '#')
-			$current_statement .= "\n" . rtrim($line);
+    $db_connection = mysql_connect($mysql_host, $mysql_user, $mysql_pass);
+    if (!$db_connection) {
+        die('Cant connect to database server: ' . mysql_error());
+    }
 
-		// Is this the end of the query string?
-		if (empty($current_statement) || (preg_match('~;[\s]*$~s', $line) == 0 && $count != count($sql_lines)))
-			continue;
+    if (!mysql_select_db($mysql_db, $db_connection)) {
+        die('Cant select database: ' . mysql_error());
+    }
 
-		// Does this table already exist?  If so, don't insert more data into it!
-		if (preg_match('~^\s*INSERT INTO ([^\s\n\r]+?)~', $current_statement, $match) != 0 && in_array($match[1], $exists))
-		{
-			$current_statement = '';
-			continue;
-		}
+    // Execute the SQL.
+    $current_statement = '';
+    $failures = array();
+    $exists = array();
+    foreach ($sql_lines as $count => $line)
+    {
+        // No comments allowed!
+        if (substr($line, 0, 1) != '#')
+            $current_statement .= "\n" . rtrim($line);
 
-		if (!mysql_query($current_statement))
-		{
-			$error_message = mysql_error($db_connection);
+        // Is this the end of the query string?
+        if (empty($current_statement) || (preg_match('~;[\s]*$~s', $line) == 0 && $count != count($sql_lines)))
+            continue;
 
-			// Error 1050: Table already exists!
-			if (strpos($error_message, 'already exists') === false)
-				$failures[$count] = $error_message;
-			elseif (preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) != 0)
-				$exists[] = $match[1];
-		}
+        // Does this table already exist?  If so, don't insert more data into it!
+        if (preg_match('~^\s*INSERT INTO ([^\s\n\r]+?)~', $current_statement, $match) != 0 && in_array($match[1], $exists))
+        {
+            $current_statement = '';
+            continue;
+        }
 
-		$current_statement = '';
-	}
+        if (!mysql_query($current_statement, $db_connection))
+        {
+            $error_message = mysql_error($db_connection);
+
+            // Error 1050: Table already exists!
+            if (strpos($error_message, 'already exists') === false)
+                $failures[$count] = $error_message;
+            elseif (preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) != 0)
+                $exists[] = $match[1];
+        }
+
+        $current_statement = '';
+    }
+
+    if (!empty($failures)) {
+        foreach ($failures as $line => $error) {
+            echo "Error on line $line: $error\n";
+        }
+    }
 }
 	
 function insert_sysop()
 {
-	if( $_POST['sysoppass'] != $_POST['sysoppass2'] )
-	{
-		die('error:  The sysop passwords do not match!');
-	}
-	
-	$username = $_POST['sysopuser'];
-	$usermail = $_POST['sysopmail'];
-	
+    if ($_POST['sysoppass'] != $_POST['sysoppass2'])
+    {
+        die('error: The sysop passwords do not match!');
+    }
 
-	
-	$secret = mksecret();
-	$wantpasshash = md5($secret . $_POST['sysoppass'] . $secret);
-	$editsecret = mksecret();
+    $username = $_POST['sysopuser'];
+    $usermail = $_POST['sysopmail'];
 
-	$ret = mysql_query("INSERT INTO users (username, class, passhash, secret, editsecret, email, status, added) VALUES (" .
-		implode(",", array_map("sqlesc", array($username, 6, $wantpasshash, $secret, $editsecret, $usermail, 'confirmed'))) .
-		",'" . get_date_time() . "')");
-	
-	
+    $secret = mksecret();
+    $wantpasshash = md5($secret . $_POST['sysoppass'] . $secret);
+    $editsecret = mksecret();
+
+	include('../include/secrets.php');
+
+    $db_connection = mysql_connect($mysql_host, $mysql_user, $mysql_pass);
+    if (!$db_connection) {
+        die('Cant connect to database server: ' . mysql_error());
+    }
+
+    if (!mysql_select_db($mysql_db, $db_connection)) {
+        die('Cant select database: ' . mysql_error());
+    }
+
+    $ret = mysql_query("INSERT INTO users (username, class, passhash, secret, editsecret, email, status, added, last_login, last_access, warneduntil, modcomment) VALUES (" .
+        implode(",", array_map("sqlesc", array($username, 6, $wantpasshash, $secret, $editsecret, $usermail, 'confirmed'))) .
+        ",'" . get_date_time() . "', '" . get_date_time() . "', '" . get_date_time() . "', '" . get_date_time() . "', '" . sqlesc($modcomment) . "')", $db_connection);
+
+    if (!$ret) {
+        die('Error inserting sysop: ' . mysql_error($db_connection));
+    }
 }
+
 
 function config()
 {
@@ -121,7 +137,7 @@ function config()
 	mysql_query("INSERT INTO config (name,value) VALUES ('announce_url','".$_POST['announce']."')");
 	mysql_query("INSERT INTO config (name,value) VALUES ('sitemail','".$_POST['sitemail']."')");
 	mysql_query("INSERT INTO config (name,value) VALUES ('funds',0 )");	
-	mysql_query("INSERT INTO config (name,value) VALUES ('peerlimit',1000 )");
+	mysql_query("INSERT INTO config (name,value) VALUES ('peerlimit',10000 )");
 	mysql_query("INSERT INTO news (userid,body,added) VALUES (1,'Welcome to your new tbsource installation',$added)");
 }
 	

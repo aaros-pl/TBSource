@@ -1,39 +1,21 @@
--- MySQL dump 9.10
---
--- Host: localhost    Database: bittorrent
--- ------------------------------------------------------
--- Server version	4.0.19-log
-
---
--- Table structure for table `avps`
---
-
 CREATE TABLE avps (
   arg varchar(20) NOT NULL default '',
   value_s text NOT NULL,
   value_i int(11) NOT NULL default '0',
   value_u int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (arg)
-) TYPE=MyISAM;
-
---
--- Table structure for table `bans`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE bans (
   id int(10) unsigned NOT NULL auto_increment,
-  added datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
   addedby int(10) unsigned NOT NULL default '0',
   comment varchar(255) NOT NULL default '',
   first int(11) default NULL,
   last int(11) default NULL,
   PRIMARY KEY  (id),
   KEY first_last (first,last)
-) TYPE=MyISAM;
-
---
--- Table structure for table `blocks`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE blocks (
   id int(10) unsigned NOT NULL auto_increment,
@@ -41,61 +23,41 @@ CREATE TABLE blocks (
   blockid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE KEY userfriend (userid,blockid)
-) TYPE=MyISAM;
-
---
--- Table structure for table `categories`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE categories (
   id int(10) unsigned NOT NULL auto_increment,
   name varchar(30) NOT NULL default '',
   image varchar(255) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table `comments`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE comments (
   id int(10) unsigned NOT NULL auto_increment,
   user int(10) unsigned NOT NULL default '0',
   torrent int(10) unsigned NOT NULL default '0',
-  added datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
   text text NOT NULL,
   ori_text text NOT NULL,
   editedby int(10) unsigned NOT NULL default '0',
-  editedat datetime NOT NULL default '0000-00-00 00:00:00',
+  editedat datetime NOT NULL,
   PRIMARY KEY  (id),
   KEY user (user),
   KEY torrent (torrent)
-) TYPE=MyISAM;
-
-#
-# Table structure for table `config`
-#
+) ENGINE=MyISAM;
 
 CREATE TABLE `config` (
   `name` varchar(255) NOT NULL default '',
   `value` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`name`)
-) TYPE=MyISAM;
-
---
--- Table structure for table `countries`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE countries (
   id int(10) unsigned NOT NULL auto_increment,
   name varchar(50) default NULL,
   flagpic varchar(50) default NULL,
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table `files`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE files (
   id int(10) unsigned NOT NULL auto_increment,
@@ -104,11 +66,7 @@ CREATE TABLE files (
   size bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY torrent (torrent)
-) TYPE=MyISAM;
-
---
--- Table structure for table `forums`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE forums (
   sort tinyint(3) unsigned NOT NULL default '0',
@@ -121,11 +79,7 @@ CREATE TABLE forums (
   topiccount int(10) unsigned NOT NULL default '0',
   minclasscreate tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table `friends`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE friends (
   id int(10) unsigned NOT NULL auto_increment,
@@ -133,41 +87,29 @@ CREATE TABLE friends (
   friendid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE KEY userfriend (userid,friendid)
-) TYPE=MyISAM;
-
---
--- Table structure for table `messages`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE messages (
   id int(10) unsigned NOT NULL auto_increment,
   sender int(10) unsigned NOT NULL default '0',
   receiver int(10) unsigned NOT NULL default '0',
-  added datetime default NULL,
+  added datetime DEFAULT NULL,
   msg text,
   unread enum('yes','no') NOT NULL default 'yes',
   poster bigint(20) unsigned NOT NULL default '0',
   location enum('in','out','both') NOT NULL default 'in',
   PRIMARY KEY  (id),
   KEY receiver (receiver)
-) TYPE=MyISAM;
-
---
--- Table structure for table `news`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE news (
   id int(10) unsigned NOT NULL auto_increment,
   userid int(11) NOT NULL default '0',
-  added datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
   body text NOT NULL,
   PRIMARY KEY  (id),
   KEY added (added)
-) TYPE=MyISAM;
-
---
--- Table structure for table `peers`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE peers (
   id int(10) unsigned NOT NULL auto_increment,
@@ -179,8 +121,8 @@ CREATE TABLE peers (
   downloaded bigint(20) unsigned NOT NULL default '0',
   to_go bigint(20) unsigned NOT NULL default '0',
   seeder enum('yes','no') NOT NULL default 'no',
-  started datetime NOT NULL default '0000-00-00 00:00:00',
-  last_action datetime NOT NULL default '0000-00-00 00:00:00',
+  started datetime NOT NULL,
+  last_action datetime NOT NULL,
   connectable enum('yes','no') NOT NULL default 'yes',
   userid int(10) unsigned NOT NULL default '0',
   agent varchar(60) NOT NULL default '',
@@ -195,11 +137,7 @@ CREATE TABLE peers (
   KEY last_action (last_action),
   KEY connectable (connectable),
   KEY userid (userid)
-) TYPE=MyISAM;
-
---
--- Table structure for table `pollanswers`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE pollanswers (
   id int(10) unsigned NOT NULL auto_increment,
@@ -210,15 +148,11 @@ CREATE TABLE pollanswers (
   KEY pollid (pollid),
   KEY selection (selection),
   KEY userid (userid)
-) TYPE=MyISAM;
-
---
--- Table structure for table `polls`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE polls (
   id int(10) unsigned NOT NULL auto_increment,
-  added datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
   question varchar(255) NOT NULL default '',
   option0 varchar(40) NOT NULL default '',
   option1 varchar(40) NOT NULL default '',
@@ -242,29 +176,21 @@ CREATE TABLE polls (
   option19 varchar(40) NOT NULL default '',
   sort enum('yes','no') NOT NULL default 'yes',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table `posts`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE posts (
   id int(10) unsigned NOT NULL auto_increment,
   topicid int(10) unsigned NOT NULL default '0',
   userid int(10) unsigned NOT NULL default '0',
-  added datetime default NULL,
+  added datetime DEFAULT NULL,
   body text,
   editedby int(10) unsigned NOT NULL default '0',
-  editedat datetime NOT NULL default '0000-00-00 00:00:00',
+  editedat datetime NOT NULL,
   PRIMARY KEY  (id),
   KEY topicid (topicid),
   KEY userid (userid),
   FULLTEXT KEY body (body)
-) TYPE=MyISAM;
-
---
--- Table structure for table `readposts`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE readposts (
   id int(10) unsigned NOT NULL auto_increment,
@@ -274,34 +200,22 @@ CREATE TABLE readposts (
   PRIMARY KEY  (id),
   KEY userid (id),
   KEY topicid (topicid)
-) TYPE=MyISAM;
-
---
--- Table structure for table `sitelog`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE sitelog (
   id int(10) unsigned NOT NULL auto_increment,
-  added datetime default NULL,
+  added datetime DEFAULT NULL,
   txt text,
   PRIMARY KEY  (id),
   KEY added (added)
-) TYPE=MyISAM;
-
---
--- Table structure for table `stylesheets`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE stylesheets (
   id int(10) unsigned NOT NULL auto_increment,
   uri varchar(255) NOT NULL default '',
   name varchar(64) NOT NULL default '',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Table structure for table `topics`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE topics (
   id int(10) unsigned NOT NULL auto_increment,
@@ -316,11 +230,7 @@ CREATE TABLE topics (
   KEY userid (userid),
   KEY subject (subject),
   KEY lastpost (lastpost)
-) TYPE=MyISAM;
-
---
--- Table structure for table `torrents`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE torrents (
   id int(10) unsigned NOT NULL auto_increment,
@@ -333,7 +243,7 @@ CREATE TABLE torrents (
   ori_descr text NOT NULL,
   category int(10) unsigned NOT NULL default '0',
   size bigint(20) unsigned NOT NULL default '0',
-  added datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
   type enum('single','multi') NOT NULL default 'single',
   numfiles int(10) unsigned NOT NULL default '0',
   comments int(10) unsigned NOT NULL default '0',
@@ -342,7 +252,7 @@ CREATE TABLE torrents (
   times_completed int(10) unsigned NOT NULL default '0',
   leechers int(10) unsigned NOT NULL default '0',
   seeders int(10) unsigned NOT NULL default '0',
-  last_action datetime NOT NULL default '0000-00-00 00:00:00',
+  last_action datetime NOT NULL,
   visible enum('yes','no') NOT NULL default 'yes',
   banned enum('yes','no') NOT NULL default 'no',
   owner int(10) unsigned NOT NULL default '0',
@@ -355,11 +265,7 @@ CREATE TABLE torrents (
   KEY visible (visible),
   KEY category_visible (category,visible),
   FULLTEXT KEY ft_search (search_text,ori_descr)
-) TYPE=MyISAM;
-
---
--- Table structure for table `users`
---
+) ENGINE=MyISAM;
 
 CREATE TABLE users (
   id int(10) unsigned NOT NULL auto_increment,
@@ -369,9 +275,9 @@ CREATE TABLE users (
   secret varchar(20) binary NOT NULL default '',
   email varchar(80) NOT NULL default '',
   status enum('pending','confirmed') NOT NULL default 'pending',
-  added datetime NOT NULL default '0000-00-00 00:00:00',
-  last_login datetime NOT NULL default '0000-00-00 00:00:00',
-  last_access datetime NOT NULL default '0000-00-00 00:00:00',
+  added datetime NOT NULL,
+  last_login datetime NOT NULL,
+  last_access datetime NOT NULL,
   editsecret varchar(20) binary NOT NULL default '',
   privacy enum('strong','normal','low') NOT NULL default 'normal',
   stylesheet int(10) default '1',
@@ -390,7 +296,7 @@ CREATE TABLE users (
   avatars enum('yes','no') NOT NULL default 'yes',
   donor enum('yes','no') NOT NULL default 'no',
   warned enum('yes','no') NOT NULL default 'no',
-  warneduntil datetime NOT NULL default '0000-00-00 00:00:00',
+  warneduntil datetime NOT NULL,
   torrentsperpage int(3) unsigned NOT NULL default '0',
   topicsperpage int(3) unsigned NOT NULL default '0',
   postsperpage int(3) unsigned NOT NULL default '0',
@@ -408,13 +314,10 @@ CREATE TABLE users (
   KEY last_access (last_access),
   KEY enabled (enabled),
   KEY warned (warned)
-) TYPE=MyISAM;
-
-
+) ENGINE=MyISAM;
 
 INSERT INTO stylesheets VALUES (1,'default.css','(default)');
 INSERT INTO stylesheets VALUES (2,'large.css','Large text');
-
 
 INSERT INTO countries VALUES (1,'Sweden','sweden.gif');
 INSERT INTO countries VALUES (2,'United States of America','usa.gif');
@@ -517,7 +420,6 @@ INSERT INTO countries VALUES (102,'Costa Rica','costarica.gif');
 INSERT INTO countries VALUES (103,'Egypt','egypt.gif');
 INSERT INTO countries VALUES (104,'Bulgaria','bulgaria.gif');
 INSERT INTO countries VALUES (105,'Isla de Muerte','jollyroger.gif');
-
 
 INSERT INTO categories VALUES (1,'Appz/PC ISO','cat_apps.gif');
 INSERT INTO categories VALUES (4,'Games/PC ISO','cat_games.gif');

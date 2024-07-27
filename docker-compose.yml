@@ -6,10 +6,11 @@ services:
       - ./app:/var/www/html
       - include:/var/www/html/include
       - torrents:/var/www/html/torrents
-      - ./install:/var/www/html/install
+      # - ./install:/var/www/html/install
     expose:
       - "9000"
     environment:
+      - TZ=Europe/Warsaw
       - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=example
@@ -20,6 +21,8 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx
+    environment:
+      - TZ=Europe/Warsaw
     ports:
       - "8080:80"
     volumes:
@@ -27,7 +30,7 @@ services:
       - ./app:/var/www/html
       - include:/var/www/html/include
       - torrents:/var/www/html/torrents
-      - ./install:/var/www/html/install
+      # - ./install:/var/www/html/install
     depends_on:
       - php
 
@@ -35,6 +38,7 @@ services:
     image: mysql:5.7
     container_name: mysql
     environment:
+      TZ: Europe/Warsaw
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: tbsource
     volumes:
